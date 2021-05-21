@@ -1,10 +1,5 @@
 // 一个非常der的compiler实现
 
-function log(arg) {
-  console.log(JSON.stringify(arg, null, 2))
-}
-
-
 function tokenizer(input) {
   let tokens = []
   let type = ''
@@ -47,14 +42,12 @@ function tokenizer(input) {
 
 function parse(template) {
   const tokens = tokenizer(template)
-
   let cur = 0
   let ast = {
     type: 'root',
     props:[],
     children: []
   }
-  console.log(tokens)
   while (cur < tokens.length) {
     ast.children.push(walk())
   }
@@ -86,7 +79,6 @@ function parse(template) {
       // return token
     }
     if (token.type == "text") {
-      // tojeb
       cur++
       return token
     }
@@ -99,7 +91,6 @@ function parse(template) {
       }
     }
   }
-
 }
 function transform(ast) {
   // 优化一下ast
@@ -124,7 +115,6 @@ function traverse(ast, context){
         const {key,val} = prop
         if(key[0]=='@'){
           ast.flag.event = true
-          console.log('xx',val)
           return {
             key:'on'+key[1].toUpperCase()+key.slice(2),
             val
@@ -181,10 +171,6 @@ export function render(_ctx, _cache, $props){
 
           return ret
         },[]).join(',')+'}'
-        // let children = node.children.map(node=>{
-        //   return walk(node)
-        // })
-        // console.log(99,children)
         return `_createVnode("${node.tag}",${props}),[
           ${node.children.map(n=>walk(n))}
         ],${JSON.stringify(flag)}`
@@ -196,29 +182,18 @@ export function render(_ctx, _cache, $props){
           return `_toDisplayString(_ctx.${node.val})`
         }
         break
-      default:
-        console.log('miss',node)
     }
-    // ast.children && ast.children.map(node=>{
-    //   return walk(node)
-    // })
   }
   return code
 }
 
-
-
 function compiler(template) {
   const ast = parse(template);
-  // console.log(ast)
+  console.log(JSON.stringify(ast,null,2))
   transform(ast)
-  // console.log(ast)
   const code = generate(ast)
   console.log(code)
-  // console.log('compiler之后的代码')
-
   // return new Function(code);
-
 }
 
 let tmpl = `<div id="app">
@@ -226,5 +201,4 @@ let tmpl = `<div id="app">
       <h1 class="item">技术摸鱼</h1>
   </div>`
 
-
-let render = compiler(tmpl)
+  compiler(tmpl)
