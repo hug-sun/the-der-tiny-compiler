@@ -14,6 +14,7 @@ function tokenizer(input) {
       } else {
         type = 'tagstart'
       }
+      continue;
     } if (ch === '>') {
       push()
       type = "text"
@@ -29,8 +30,8 @@ function tokenizer(input) {
 
   function push() {
     if (val) {
-      if (type === "tagstart") val = val.slice(1) // <div => div
-      if (type === "tagend") val = val.slice(2)   //  </div  => div
+      // if (type === "tagstart") val = val.slice(1) // <div => div
+      // if (type === "tagend") val = val.slice(2)   //  </div  => div
       tokens.push({
         type,
         val
